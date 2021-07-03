@@ -12,7 +12,7 @@ class GraphApi {
 	}
 
 	postHelloWorld() {
-		return this.httpClient.post();
+		return this.httpClient.post({data: {foo:'bar'}});
 	}
 }
 
