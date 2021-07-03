@@ -1,3 +1,6 @@
-const page = {
-	getCanvasEl: () => document.getElementById('graph-canvas'),
+class Page {
+	
+	static getCanvasEl() { 
+		return document.getElementById('graph-canvas');
+	}
 }
