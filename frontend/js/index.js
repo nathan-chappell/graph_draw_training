@@ -15,12 +15,15 @@ async function animate(attrGraph, renderer) {
 	animate(attrGraph, renderer);
 }
 
-const main = () => {
+const main = async () => {
 	const canvasEl = Page.getCanvasEl();
 	const graphData = dummyApi.getGraphData();
 	const attrGraph = new AttrGraph(graphData);
 	const renderer = new SimpleGraphRenderer(canvasEl);
 	animate(attrGraph, renderer);
+	const api = new GraphApi();
+	const hello = await api.helloWorld();
+	console.log(hello.json);
 }
 
 main();

@@ -1,4 +1,19 @@
+// depends ./httpClient.js
+
 class GraphApi {
+	constructor() {
+		this.httpClient = new HttpClient({
+			baseAddress: 'http://localhost:8888'
+		});
+	}
+
+	helloWorld() {
+		return this.httpClient.get();
+	}
+
+	postHelloWorld() {
+		return this.httpClient.post();
+	}
 }
 
 const demoGraphData = {
