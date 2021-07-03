@@ -1,7 +1,7 @@
 const li_scalar = (u, v, t) => (1-t)*u + t*v;
 const li_array = (a1, a2, t) => a1.map((s,i) => li_scalar(s,a2[i],t));
 const li_pos_out = (pos1, pos2, t, outpos) => {
-	for (let i = 0; i < outpos.length) {
+	for (let i = 0; i < outpos.length; ++i) {
 		outpos[i] = li_scalar(pos1[i], pos2[i], t);
 	}
 }
@@ -39,7 +39,7 @@ class Timer {
 		return this.waiter;
 	}
 
-	_advance() {
+	async _advance() {
 		if (this.state != TIMER_STATE.IN_PROGRESS) {
 			return;
 		}
@@ -82,7 +82,6 @@ class AttrGraphAnimation {
 	to(nodePosDict, t = 1, delta = 100) {
 		const keys = Object.keys(nodePosDict);
 		const fromPosArray = keys.map(k => this.attrGraph.nodePos(k));
-		const fromPosArray = keys.map(k => nodePosDict[k]);
 		const outPosArray = fromPosArray.map(pos => [...pos]); // fresh copy
 		const callback = () => {
 			for (let i = 0; i < keys.length; ++i) {
