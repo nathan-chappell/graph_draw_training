@@ -18,9 +18,9 @@ async function animate(attrGraph, renderer) {
 const testApi = async () => {
 	const api = new GraphApi();
 	const hello = await api.helloWorld();
-	console.log(hello.json);
+	console.log('hello', hello.data);
 	const helloPost = await api.postHelloWorld();
-	console.log(helloPost.json);
+	console.log('helloPost', helloPost.json);
 }
 
 const main = async () => {

@@ -49,12 +49,14 @@ class HttpClient {
 
 	async post({route, params, data} = {}) {
 		const url = this.makeUrl({route, params});
+		const body = JSON.stringify(data || {});
 		const response = await fetch(url, {
 			method: 'POST',
 			mode: 'cors',
-			body: JSON.stringify(data || {}),
+			body,
 			headers: {
 				'content-type': 'application/json',
+				'content-length': body.length,
 			},
 		});
 		return this.handleResponse(response);
