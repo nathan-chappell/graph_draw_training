@@ -10,12 +10,20 @@ sys.path.append(load_deps_dir)
 
 from load_deps import JsDepGraph, get_dependency_order
 
+debug = False
+
+def parse_args():
+    global debug
+    if len(sys.argv) > 1 and sys.argv[1] == '-v':
+        debug = True
+
 def get_deps(index_path, root_dir):
     index = Path(index_path)
     depGraph = JsDepGraph(root_dir=root_dir)
-    depGraph.to_dot()
     dep_order = get_dependency_order(depGraph)
-    pprint(dep_order)
+    if debug:
+        depGraph.to_dot()
+        pprint(dep_order)
     deps = [str(Path(p).relative_to(Path('..').resolve())) + '.js' for p in dep_order]
     return deps
 
@@ -25,10 +33,12 @@ def get_rendered_template(template_dir, template_file, template_args):
         template_contents = f.read()
     template = jinja2.Template(template_contents)
     rendered = template.render(**template_args)
-    print(rendered)
+    if debug:
+        print(rendered)
     return rendered
 
 if __name__ == '__main__':
+    parse_args()
 
     index_path = '../js/index.js'
     root_dir = '../js'
