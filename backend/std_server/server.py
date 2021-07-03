@@ -1,39 +1,47 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
 
-from request import Request
-
-def cors(requestHandler):
-    requestHandler.send_header('access-control-allow-origin','*')
-    requestHandler.send_header('access-control-allow-methods','GET, POST, OPTIONS')
-    requestHandler.send_header('access-control-allow-headers','content-type')
+from router import Router
+from middleware import build_middleware, router_middleware, cors_middleware
 
 class RequestHandler(BaseHTTPRequestHandler):
+    def __init__(self, *args):
+        super().__init__(*args)
+
     def do_GET(self):
-        self.send_response(200,'hello world')
-        cors(self)
-        self.send_header('content-type','application/json')
-        self.end_headers()
-        x = {'foo': 'bar'}
-        data = json.dumps(x)
-        self.wfile.write(bytes(data,'ascii'))
+        self.middleware(self)
 
     def do_POST(self):
-        r = Request(self)
-        print(r)
-        self.send_response(200,'hello world')
-        cors(self)
-        self.send_header('content-type','application/json')
-        self.end_headers()
-        x = {'foo': 'bar'}
-        data = json.dumps(x)
-        self.wfile.write(bytes(data,'ascii'))
+        self.middleware(self)
 
     def do_OPTIONS(self):
-        self.send_response(200,'hello world')
-        cors(self)
-        self.end_headers()
+        self.middleware(self)
+
+class MyRequestHandler(RequestHandler):
+    router = Router()
+
+    def __init__(self, *args):
+        middlewares = [
+            router_middleware(self.router),
+            cors_middleware,
+        ]
+        # problematic
+        self.router.who_for = self
+        self.middleware = build_middleware(middlewares)
+        super().__init__(*args)
+
+    @router.get('/')
+    def test_get(self, request):
+        request.response.data = "<h1> hello world </h1>"
+
+    @router.post('/')
+    def test_post(self, request):
+        request.response.data = {'hello':'world'}
+
+    @router.options('*')
+    def options(self, request):
+        ...
 
 if __name__ == '__main__':
-    server = HTTPServer(('localhost',8888), RequestHandler)
+    server = HTTPServer(('localhost',8888), MyRequestHandler)
     server.serve_forever()

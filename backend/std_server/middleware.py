@@ -1,27 +1,36 @@
-from request import Request
+import json
 
-def cors(requestHandler):
-    requestHandler.send_header('access-control-allow-origin','*')
-    requestHandler.send_header('access-control-allow-methods','GET, POST, OPTIONS')
-    requestHandler.send_header('access-control-allow-headers','content-type')
+from request import Request
 
 def nop(x): ...
 
+def convert_to_request(_next):
+    def handler(requestHandler):
+        return _next(Request(requestHandler))
+    return handler
+
 def last_op(_next):
-    def handler(request):
-        requestHandler = request.requestHandler
-        response = _next(request)
+    def handler(requestHandler):
+        # requestHandler = request.requestHandler
+        request = Request(requestHandler)
+        _next(request)
+        response = request.response
         data = None
-        requestHandler.send_response(request.status_code, request.message)
-        for k,v in response.headers:
+        requestHandler.send_response(response.status_code, response.message)
+        for k,v in response.headers.items():
             requestHandler.send_header(k,v)
         if response.data is not None:
-            data = bytes(JSON.dumps(response.data))
-            requestHandler.send_header('content-type','application/json')
-            requestHandler.send_header('content-length',str(len(data)))
+            if type(response.data) == str:
+                data = bytes(response.data, 'ascii')
+                requestHandler.send_header('content-type','text/html')
+            else:
+                data = bytes(json.dumps(response.data), 'ascii')
+                requestHandler.send_header('content-type','application/json')
         requestHandler.end_headers()
         if data is not None:
+            requestHandler.send_header('content-length',str(len(data)))
             requestHandler.wfile.write(data)
+    return handler
 
 def build_middleware(middlewares):
     middleware = nop
@@ -32,14 +41,15 @@ def build_middleware(middlewares):
 # must always be first!
 def router_middleware(router):
     def apply_middleware(_next):
-        def handler(request)
-            response = router.call_route(request.path, request)
-            return response
+        def handler(request):
+            router.call_route(request)
+            _next(request)
         return handler
     return apply_middleware
 
 def cors_middleware(_next):
     def handler(request):
-        request.response.headers['access-control-allow-origin','*']
-        request.response.headers['access-control-allow-methods','GET, POST, OPTIONS']
-        request.response.headers['access-control-allow-headers','content-type']
+        request.response.headers['access-control-allow-origin'] = '*'
+        request.response.headers['access-control-allow-methods'] = 'GET, POST, OPTIONS'
+        request.response.headers['access-control-allow-headers'] = 'content-type'
+    return handler

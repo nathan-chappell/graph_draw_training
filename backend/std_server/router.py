@@ -1,11 +1,9 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
+import re
 
-from request import Request
-from middlewares import build_middleware
+from  params import Params
 
 class Router:
-    def __init__(self, who_for):
+    def __init__(self, who_for = None):
         self.routes = {
             'GET': {},
             'POST': {},
@@ -13,11 +11,20 @@ class Router:
         }
         self.who_for = who_for
 
-    def route(self, where):
-        def wrapper(what):
-            self.routes[where] = what
-            return wrapped
+    def route(self, method, route):
+        def wrapper(fn):
+            self.routes[method][route] = fn
+            return fn
         return wrapper
+
+    def get(self, route):
+        return self.route('GET',route)
+
+    def post(self, route):
+        return self.route('POST',route)
+
+    def options(self, route):
+        return self.route('OPTIONS',route)
 
     def match_route(self, where, method):
         routes = self.routes[method]
@@ -40,41 +47,3 @@ class Router:
         f, param_dict = self.match_route(request.path, request.method.upper())
         request.params = Params(param_dict)
         return f(self.who_for, request)
-
-class RequestHandler(BaseHTTPRequestHandler):
-    def __init__(self, middlewares):
-        self.middleware = build_middleware(middlewares)
-
-    def do_GET(self):
-        route = self.path
-        result = self.get_router.call_route(route)
-        self.send_response(200,'hello world')
-        cors(self)
-        self.send_header('content-type','application/json')
-        self.end_headers()
-        x = {'foo': 'bar'}
-        data = json.dumps(x)
-        self.wfile.write(bytes(data,'ascii'))
-
-    def do_POST(self):
-        r = Request(self)
-        print(r)
-        self.send_response(200,'hello world')
-        cors(self)
-        self.send_header('content-type','application/json')
-        self.end_headers()
-        x = {'foo': 'bar'}
-        data = json.dumps(x)
-        self.wfile.write(bytes(data,'ascii'))
-
-    def do_OPTIONS(self):
-        self.send_response(200,'hello world')
-        cors(self)
-        self.end_headers()
-
-class MyServer:
-    getRouter = Router()
-    postRouter = Router()
-
-    def __init__(self, middlewares):
-        super().__init__(self, middlewares)
