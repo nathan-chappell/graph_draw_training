@@ -1,57 +1,71 @@
+
+
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<link rel="stylesheet" href="./css/index.css" />
-		<script src="./js/load.js" defer></script>
-		<script src="./js/index.js" defer></script>
-	</head>
-	<body>
-		<h1 class="title m-center">Graph Drawing Frontend</h1>
-		<form class="m-center">
-			<div id="graph-form" class="form-section">
-				<div class="form-entry">
-				<label for="select-graph">Select graph</label>
-				<select name="select-graph" id="select-graph">
-				</select>
-				</div>
-			</div>
-			<div class="vsep"></div>
-			<div id="graph-form" class="form-section">
-				<div class="form-entry">
-				<label for="select-node">Select node</label>
-				<select name="select-node" id="select-node"></select>
-				<button id="delete-node">Delete</button>
-				</div>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="./css/index.css" />
+        <script src="js/app/api/api.js" defer></script>
+        <script src="js/app/graph/graph.js" defer></script>
+        <script src="js/app/page.js" defer></script>
+        <script src="js/app/render/render.js" defer></script>
+        <script src="js/app/animate/animate.js" defer></script>
+        <script src="js/index.js" defer></script>
+        
+    </head>
+    <body>
+        <h1 class="title m-center">Graph Drawing Frontend</h1>
+        <form class="m-center">
+            <div id="graph-form-section" class="form-section">
+                
 
-				<div class="hsep"></div>
+<div class="form-entry">
+    <label for="select-graph">Select graph</label>
+    <select name="select-graph" id="select-graph"></select>
+    <button id="delete-graph">Delete</button>
+</div>
 
-				<div class="form-entry">
-				<label for="add-node">Add node</label>
-				<input type="text" placeholder="node name"/>
-				<button id="add-node">Add</button>
-				</div>
-			</div>
-			<div class="vsep"></div>
-			<div id="graph-form" class="form-section">
-				<div class="form-entry">
-				<label for="select-edge">Select edge</label>
-				<select name="select-edge" id="select-edge"></select>
-				<button id="delete-edge">Delete</button>
-				</div>
 
-				<div class="hsep"></div>
+            </div>
+            <div class="vsep"></div>
+            <div id="node-form-section" class="form-section">
 
-				<div class="form-entry">
-				<label for="add-edge">Add edge</label>
-				<input class="edge-node" type="text" placeholder="node name"/>
-				<input class="edge-node" type="text" placeholder="node name"/>
-				<button id="add-edge">Add</button>
-				</div>
-			</div>
-		</form>
-		<div class="graph-drawing m-center">
-			<canvas id="graph-canvas" class="m-center" width="400" height="400">graph-drawing</canvas>
-		</div>
-	</body>
+<div class="form-entry">
+    <label for="select-node">Select node</label>
+    <select name="select-node" id="select-node"></select>
+    <button id="delete-node">Delete</button>
+</div>
+
+<div class="hsep"></div>
+
+<div class="form-entry">
+    <label for="add-node">Add node</label>
+    <input type="text" placeholder="node name"/>
+    <button id="add-node">Add</button>
+</div>
+
+</div>
+            <div class="vsep"></div>
+            <div id="edge-form-section" class="form-section">
+
+<div class="form-entry">
+    <label for="select-edge">Select edge</label>
+    <select name="select-edge" id="select-edge"></select>
+    <button id="delete-edge">Delete</button>
+</div>
+
+<div class="hsep"></div>
+
+<div class="form-entry">
+    <label for="add-edge">Add edge</label>
+    <input type="text" placeholder="edge name"/>
+    <button id="add-edge">Add</button>
+</div>
+
+</div>
+        </form>
+        <div class="graph-drawing m-center">
+            <canvas id="graph-canvas" class="m-center" width="400" height="400">graph-drawing</canvas>
+        </div>
+    </body>
 </html>
