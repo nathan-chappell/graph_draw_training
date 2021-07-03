@@ -35,7 +35,7 @@ class HttpClient {
 	async handleResponse(response) {
 		const data = await this.readData(response.body);
 		const result = { data, response };
-		Object.defineProperty(data, 'json', {
+		Object.defineProperty(result, 'json', {
 			get: () => JSON.parse(data),
 		});
 		return result;
@@ -51,8 +51,8 @@ class HttpClient {
 		const url = this.makeUrl({route, params});
 		const response = await fetch(url, {
 			method: 'POST',
-			mode: 'same-origin',
-			body: JSON.stringify(data),
+			mode: 'cors',
+			body: JSON.stringify(data || {}),
 			headers: {
 				'content-type': 'application/json',
 			},
