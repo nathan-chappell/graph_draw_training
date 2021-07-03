@@ -20,6 +20,7 @@ class Timer {
 	constructor({t, delta, callback}) {
 		this.t = t;
 		this.delta = delta;
+		this.callback = callback;
 	}
 
 	get timePercent() {
@@ -31,7 +32,7 @@ class Timer {
 		let _res;
 		this.waiter = new Promise(res => { _res = res; });
 		this.onComplete = () => {
-			_res;
+			_res();
 			this.state = TIMER_STATE.COMPLETE;
 		}
 		this.cur_t = 0;
@@ -43,13 +44,13 @@ class Timer {
 		if (this.state != TIMER_STATE.IN_PROGRESS) {
 			return;
 		}
-		if (this.cur_t > t) {
+		if (this.cur_t > this.t) {
 			this.onComplete();
 			return;
 		}
-		await callback(this.cur_t);
+		await this.callback(this.cur_t);
 		this.cur_t += this.delta;
-		setTimeout(this._advance, this.delta);
+		setTimeout(() => this._advance(), this.delta);
 	}
 
 	stop() {
@@ -62,12 +63,16 @@ class PosAnimator {
 		this.timer = new Timer({t, delta, callback: this.onTimer.bind(this)});
 		this.start = this.timer.start.bind(this.timer);
 		this.stop = this.timer.stop.bind(this.timer);
+		this.callback = callback;
+		this.fromPosArray = fromPosArray;
+		this.toPosArray = toPosArray;
+		this.outPosArray = outPosArray;
 	}
 
 	onTimer() {
 		const t = this.timer.timePercent;
-		for (let i = 0; i < outPosArray.length; ++i) {
-			li_pos_out(this.fromPosArray[i], this.toPosArray[i], t, this.outPosArray);
+		for (let i = 0; i < this.outPosArray.length; ++i) {
+			li_pos_out(this.fromPosArray[i], this.toPosArray[i], t, this.outPosArray[i]);
 		}
 		this.callback();
 	}
@@ -79,9 +84,10 @@ class AttrGraphAnimation {
 		this.renderer = renderer;
 	}
 
-	to(nodePosDict, t = 1, delta = 100) {
+	to(nodePosDict, t = 1000, delta = 10) {
 		const keys = Object.keys(nodePosDict);
 		const fromPosArray = keys.map(k => this.attrGraph.nodePos(k));
+		const toPosArray = keys.map(k => nodePosDict[k]);
 		const outPosArray = fromPosArray.map(pos => [...pos]); // fresh copy
 		const callback = () => {
 			for (let i = 0; i < keys.length; ++i) {

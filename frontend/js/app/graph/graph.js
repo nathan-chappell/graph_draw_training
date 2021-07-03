@@ -33,22 +33,30 @@ class BaseGraph {
 	}
 }
 
+const makeAttrProxy = attrs => new Proxy(attrs, {
+	get: (t, key) => {
+		if (!t[key]) {
+			t[key] = {};
+		}
+		return t[key];
+	}
+});
+
+/*
+ * pos: [0,1]x[0,1]
+ */
 class AttrGraph extends BaseGraph {
 	constructor({g, attrs}) {
 		super(g);
-		this.attrs = attrs;
+		this.attrs = makeAttrProxy(attrs);
 	}
 
 	nodePos(v) {
-		let attrs = this.attrs[v];
-		if (!attrs) {
-			attrs = this.attrs[v] = {};
-		}
-		let pos = attrs.pos;
+		let pos = this.attrs.pos[v];
 		if (!pos) {
-			pos = attrs.pos = [Math.random(), Math.random()];
+			pos = this.attrs.pos[v] = [Math.random(), Math.random()];
 		}
-		console.log('nodePos',v,pos);
+		// console.log('nodePos',v,pos);
 		return pos;
 	}
 }
