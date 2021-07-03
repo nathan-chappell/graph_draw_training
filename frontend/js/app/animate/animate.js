@@ -6,6 +6,8 @@ const li_pos_out = (pos1, pos2, t, outpos) => {
 	}
 }
 
+// depends ../render/render.js
+
 const TIMER_STATE = {
 	INIT: 'init',
 	IN_PROGRESS: 'in_progress',
