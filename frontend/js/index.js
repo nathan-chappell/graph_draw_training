@@ -7,20 +7,24 @@
 const randPos = graph =>
 	[...graph.V].reduce((d,k) => ({...d, [k]: [Math.random(), Math.random()]}), {});
 
+let count = 0;
+
 async function animate(attrGraph, renderer) {
 	renderer.renderGraph(attrGraph);
 	const animation = new AttrGraphAnimation(attrGraph, renderer);
 	const toPos = randPos(attrGraph);
 	await animation.to(toPos, 1500);
-	animate(attrGraph, renderer);
+	if (++count < 10) {
+		animate(attrGraph, renderer);
+	}
 }
 
 const testApi = async () => {
 	const api = new GraphApi();
 	const hello = await api.helloWorld();
-	console.log('hello', hello.data);
+	console.log(hello.json);
 	const helloPost = await api.postHelloWorld();
-	console.log('helloPost', helloPost.json);
+	console.log(helloPost.json);
 }
 
 const main = async () => {
