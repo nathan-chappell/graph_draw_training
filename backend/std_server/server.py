@@ -1,27 +1,17 @@
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import json
+from http.server import HTTPServer
 
+from server_base import RequestHandler
 from router import Router
-from middleware import build_middleware, router_middleware, cors_middleware
+from middleware import build_middleware, router_middleware, cors_middleware, logging_middleware
+from errors import error_middleware
 
-class RequestHandler(BaseHTTPRequestHandler):
-    def __init__(self, *args):
-        super().__init__(*args)
-
-    def do_GET(self):
-        self.middleware(self)
-
-    def do_POST(self):
-        self.middleware(self)
-
-    def do_OPTIONS(self):
-        self.middleware(self)
-
-class MyRequestHandler(RequestHandler):
+class MiddlewareRequestHandler(RequestHandler):
     router = Router()
 
     def __init__(self, *args):
         middlewares = [
+            logging_middleware,
+            error_middleware,
             router_middleware(self.router),
             cors_middleware,
         ]
@@ -43,5 +33,5 @@ class MyRequestHandler(RequestHandler):
         ...
 
 if __name__ == '__main__':
-    server = HTTPServer(('localhost',8888), MyRequestHandler)
+    server = HTTPServer(('localhost',8888), MiddlewareRequestHandler)
     server.serve_forever()

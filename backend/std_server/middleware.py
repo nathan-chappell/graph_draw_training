@@ -49,3 +49,9 @@ def cors_middleware(_next):
         request.response.headers['access-control-allow-methods'] = 'GET, POST, OPTIONS'
         request.response.headers['access-control-allow-headers'] = 'content-type'
     return handler
+
+def logging_middleware(_next):
+    def handler(request):
+        print(request)
+        _next(request)
+    return handler
