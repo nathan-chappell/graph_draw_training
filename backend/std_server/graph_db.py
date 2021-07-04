@@ -4,13 +4,13 @@ from collections import defaultdict
 
 def new_id():
     new_id.id += 1
-    return new_id.id
+    return str(new_id.id)
 
 setattr(new_id,'id',0)
 
 class GraphDB:
     def __init__(self):
-        self.data = defaultdict(lambda : defaultdict(list))
+        self.data = {}
 
     def create(self, graph):
         self.data[new_id()] = graph
@@ -22,4 +22,4 @@ class GraphDB:
         self.data[_id] = graph
 
     def delete(self, _id):
-        del self[_id]
+        del self.data[_id]

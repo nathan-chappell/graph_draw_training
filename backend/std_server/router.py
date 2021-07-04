@@ -9,6 +9,7 @@ class Router:
             'GET': {},
             'POST': {},
             'OPTIONS': {},
+            'DELETE': {},
         }
         self.who_for = who_for
 
@@ -27,6 +28,9 @@ class Router:
     def options(self, route):
         return self.route('OPTIONS',route)
 
+    def delete(self, route):
+        return self.route('DELETE',route)
+
     def match_route(self, where, method):
         routes = self.routes[method]
         for name,fn in routes.items():
@@ -38,7 +42,7 @@ class Router:
             if not is_regex and where == name:
                 return fn, None
             elif is_regex:
-                regex = re.sub(r'{(\w*)}',r'(?P<\1>[a-zA-Z0-9_-]*)', name)
+                regex = re.sub(r'{(\w*)}',r'(?P<\1>[a-zA-Z0-9_*-]*)', name)
                 m = re.match(regex, where)
                 if m is None:
                     continue
@@ -48,5 +52,6 @@ class Router:
     def call_route(self, request):
         route = re.sub(r'\?.*', '', request.path)
         f, param_dict = self.match_route(route, request.method.upper())
+        print(f'matched fn: {f.__name__}')
         request.params = Params(param_dict)
         return f(self.who_for, request)

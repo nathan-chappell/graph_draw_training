@@ -12,3 +12,6 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self):
         self.middleware(self)
+
+    def do_DELETE(self):
+        self.middleware(self)
