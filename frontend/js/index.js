@@ -22,16 +22,17 @@ async function animate(attrGraph, renderer) {
 const testApi = async () => {
 	const api = new GraphApi();
 	const hello = await api.helloWorld();
-	console.log(hello.json);
+	console.log(hello.data);
 	const helloPost = await api.postHelloWorld();
 	console.log(helloPost.json);
 }
 
 const main = async () => {
-	const canvasEl = Page.getCanvasEl();
 	const graphData = dummyApi.getGraphData();
 	const attrGraph = new AttrGraph(graphData);
-	const renderer = new SimpleGraphRenderer(canvasEl);
+	const page = new Page();
+	page.load(new GraphApi());
+	const renderer = new SimpleGraphRenderer(page.canvasEl);
 	animate(attrGraph, renderer);
 	await testApi();
 }

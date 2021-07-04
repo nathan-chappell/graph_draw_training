@@ -3,7 +3,7 @@
 <div class="form-entry">
     <label for="select-{{ name }}">Select {{ name }}</label>
     <select name="select-{{ name }}" id="select-{{ name }}"></select>
-    <button id="delete-{{ name }}">Delete</button>
+    <button id="delete-{{ name }}" type="button">Delete</button>
 </div>
 
 {% endmacro %}
@@ -11,8 +11,8 @@
 
 <div class="form-entry">
     <label for="add-{{ name }}">Add {{ name }}</label>
-    <input type="text" placeholder="{{ name }} name"/>
-    <button id="add-{{ name }}">Add</button>
+	<input type="text" id="input-{{ name }}" placeholder="{{ name }} name"/>
+    <button id="add-{{ name }}" type="button">Add</button>
 </div>
 
 {% endmacro %}
@@ -31,6 +31,8 @@
         <form class="m-center">
             <div id="graph-form-section" class="form-section">
                 {{ delete_entry('graph') }}
+                <div class="hsep"></div>
+                {{- add_entry('graph') -}}
             </div>
             <div class="vsep"></div>
             <div id="node-form-section" class="form-section">

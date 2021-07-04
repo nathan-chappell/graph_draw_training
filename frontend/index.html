@@ -5,12 +5,12 @@
     <head>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="./css/index.css" />
-        <script src="js/app/api/httpClient.js" defer></script>
         <script src="js/app/graph/graph.js" defer></script>
         <script src="js/app/page.js" defer></script>
         <script src="js/app/render/render.js" defer></script>
-        <script src="js/app/api/api.js" defer></script>
+        <script src="js/app/api/httpClient.js" defer></script>
         <script src="js/app/animate/animate.js" defer></script>
+        <script src="js/app/api/api.js" defer></script>
         <script src="js/index.js" defer></script>
         
     </head>
@@ -23,26 +23,34 @@
 <div class="form-entry">
     <label for="select-graph">Select graph</label>
     <select name="select-graph" id="select-graph"></select>
-    <button id="delete-graph">Delete</button>
+    <button id="delete-graph" type="button">Delete</button>
 </div>
 
 
-            </div>
+                <div class="hsep"></div>
+
+<div class="form-entry">
+    <label for="add-graph">Add graph</label>
+	<input type="text" id="input-graph" placeholder="graph name"/>
+    <button id="add-graph" type="button">Add</button>
+</div>
+
+</div>
             <div class="vsep"></div>
             <div id="node-form-section" class="form-section">
 
 <div class="form-entry">
     <label for="select-node">Select node</label>
     <select name="select-node" id="select-node"></select>
-    <button id="delete-node">Delete</button>
+    <button id="delete-node" type="button">Delete</button>
 </div>
 
 <div class="hsep"></div>
 
 <div class="form-entry">
     <label for="add-node">Add node</label>
-    <input type="text" placeholder="node name"/>
-    <button id="add-node">Add</button>
+	<input type="text" id="input-node" placeholder="node name"/>
+    <button id="add-node" type="button">Add</button>
 </div>
 
 </div>
@@ -52,15 +60,15 @@
 <div class="form-entry">
     <label for="select-edge">Select edge</label>
     <select name="select-edge" id="select-edge"></select>
-    <button id="delete-edge">Delete</button>
+    <button id="delete-edge" type="button">Delete</button>
 </div>
 
 <div class="hsep"></div>
 
 <div class="form-entry">
     <label for="add-edge">Add edge</label>
-    <input type="text" placeholder="edge name"/>
-    <button id="add-edge">Add</button>
+	<input type="text" id="input-edge" placeholder="edge name"/>
+    <button id="add-edge" type="button">Add</button>
 </div>
 
 </div>

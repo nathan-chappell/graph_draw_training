@@ -14,6 +14,28 @@ class GraphApi {
 	postHelloWorld() {
 		return this.httpClient.post({data: {foo:'bar'}});
 	}
+
+	create(data) {
+		return this.httpClient.post({
+			route: 'create',
+			data,
+		});
+	}
+
+	read(id) {
+		return this.httpClient.get({ route: id });
+	}
+
+	update(id, data) {
+		return this.httpClient.post({
+			route: `update/${id}`,
+			data,
+		});
+	}
+
+	delete(id) {
+		return this.httpClient.delete({ route: `update/${id}`, });
+	}
 }
 
 const demoGraphData = {

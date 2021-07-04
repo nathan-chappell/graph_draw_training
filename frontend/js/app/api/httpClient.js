@@ -61,4 +61,10 @@ class HttpClient {
 		});
 		return this.handleResponse(response);
 	}
+
+	async delete({route, params} = {}) {
+		const url = this.makeUrl({route, params});
+		const response = await fetch(url);
+		return this.handleResponse(response);
+	}
 }
