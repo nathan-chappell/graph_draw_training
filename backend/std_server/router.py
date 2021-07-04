@@ -1,6 +1,7 @@
 import re
 
-from  params import Params
+from params import Params
+from errors import NotFound
 
 class Router:
     def __init__(self, who_for = None):
@@ -42,8 +43,10 @@ class Router:
                 if m is None:
                     continue
                 return fn, m.groupdict()
+        raise NotFound()
 
     def call_route(self, request):
-        f, param_dict = self.match_route(request.path, request.method.upper())
+        route = re.sub(r'\?.*', '', request.path)
+        f, param_dict = self.match_route(route, request.method.upper())
         request.params = Params(param_dict)
         return f(self.who_for, request)
