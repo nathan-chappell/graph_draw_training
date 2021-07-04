@@ -4,12 +4,8 @@ from request import Request
 
 def nop(x): ...
 
-def convert_to_request(_next):
-    def handler(requestHandler):
-        return _next(Request(requestHandler))
-    return handler
-
-def last_op(_next):
+def first_op(_next):
+    """Essentially the "framework" middleware"""
     def handler(requestHandler):
         # requestHandler = request.requestHandler
         request = Request(requestHandler)
@@ -36,7 +32,7 @@ def build_middleware(middlewares):
     middleware = nop
     for _prev in reversed(middlewares):
         middleware = _prev(middleware)
-    return last_op(middleware)
+    return first_op(middleware)
 
 # must always be first!
 def router_middleware(router):

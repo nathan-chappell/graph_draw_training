@@ -1,4 +1,5 @@
 from pprint import pformat
+from urllib.parse import urlparse, parse_qs
 import json
 
 from params import Params
@@ -13,7 +14,8 @@ class Response:
 class Request:
     """Input to functions will be converted to a Request"""
     def __init__(self, requestHandler, param_dict = {}):
-        self.params = Params(param_dict)
+        self.params = Params(param_dict) # routing will add params later
+        self.query_params = parse_qs(urlparse(requestHandler.path).query)
         self.path = requestHandler.path
         self.method = requestHandler.command
         self.headers = requestHandler.headers
@@ -39,6 +41,9 @@ Request:
 {self.method} {self.path}
 headers:
 {dict(self.headers)}
+query_params:
+{self.query_params}
+params:
 {self.params}
 Data:
 {self.data}
