@@ -64,7 +64,7 @@ class HttpClient {
 
 	async delete({route, params} = {}) {
 		const url = this.makeUrl({route, params});
-		const response = await fetch(url);
+		const response = await fetch(url, { method: 'DELETE', mode: 'cors'});
 		return this.handleResponse(response);
 	}
 }

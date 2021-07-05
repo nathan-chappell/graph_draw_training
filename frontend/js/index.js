@@ -2,7 +2,8 @@
 // depends app/api/api.js
 // depends app/graph/graph.js
 // depends app/render/render.js
-// depends app/page.js
+// depends app/view/page.js
+// depends app/view/pageView.js
 
 const randPos = graph =>
 	[...graph.V].reduce((d,k) => ({...d, [k]: [Math.random(), Math.random()]}), {});
@@ -35,6 +36,9 @@ const main = async () => {
 	const renderer = new SimpleGraphRenderer(page.canvasEl);
 	animate(attrGraph, renderer);
 	await testApi();
+	const api = new GraphApi();
+	pageView = new PageView({page, api});
+	pageView.attachHandlers();
 }
 
 main();

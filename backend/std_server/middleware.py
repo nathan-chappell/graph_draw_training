@@ -46,7 +46,7 @@ def router_middleware(router):
 def cors_middleware(_next):
     def handler(request):
         request.response.headers['access-control-allow-origin'] = '*'
-        request.response.headers['access-control-allow-methods'] = 'GET, POST, OPTIONS'
+        request.response.headers['access-control-allow-methods'] = 'GET, POST, OPTIONS, DELETE'
         request.response.headers['access-control-allow-headers'] = 'content-type'
     return handler
 

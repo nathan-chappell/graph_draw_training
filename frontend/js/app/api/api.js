@@ -34,7 +34,7 @@ class GraphApi {
 	}
 
 	delete(id) {
-		return this.httpClient.delete({ route: `update/${id}`, });
+		return this.httpClient.delete({ route: `${id}`, });
 	}
 }
 

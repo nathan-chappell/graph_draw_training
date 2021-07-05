@@ -46,7 +46,7 @@ const makeAttrProxy = attrs => new Proxy(attrs, {
  * pos: [0,1]x[0,1]
  */
 class AttrGraph extends BaseGraph {
-	constructor({g, attrs}) {
+	constructor({g = {}, attrs = {}}) {
 		super(g);
 		this.attrs = makeAttrProxy(attrs);
 	}

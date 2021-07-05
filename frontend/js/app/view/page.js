@@ -19,13 +19,6 @@ class Page {
 		});
 	}
 
-	attachHandlers(handlers) {
-		this.keys.forEach(k => {
-			this[k].add.onclick = handlers[k].add;
-			this[k].delete.onclick = handlers[k].delete;
-		});
-	}
-
 	clearOptions(k) {
 		const el = this[k].select;
 		while (el.options.length > 0) {
@@ -39,8 +32,9 @@ class Page {
 
 	async loadGraphOptions(api) {
 		this.clearAllOptions();
-		const allGraphs = await api.read('_all');
-		Object.entries(allGraphs).forEach(([id,g]) => {
+		const response = await api.read('_all');
+		console.log('response',response);
+		Object.entries(response.json).forEach(([id,g]) => {
 			const option = DC('option');
 			option.value = id;
 			option.text = g.name || id;
@@ -49,13 +43,6 @@ class Page {
 	}
 
 	async load(api) {
-		const handlers = {
-			graph: {
-				add: () => api.create({ name: this.graph.input.value, g: {}, attrs: {}}),
-				delete: () => api.delete(this.graph.select.value),
-			},
-		}
 		await this.loadGraphOptions(api);
-		this.attachHandlers(handlers);
 	}
 }
