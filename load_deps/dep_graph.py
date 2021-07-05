@@ -7,6 +7,10 @@ from typing import List, DefaultDict, Set, Dict, Iterable, Union
 Filename = str
 Key = str
 
+def remove_suffix(s, suffix):
+    if s.find(suffix) == -1:
+        return
+    return s[:s.find(suffix)]
 
 class Node:
     graph: "DepGraph" = None
@@ -43,7 +47,8 @@ class DepGraph:
 
     def get_key(self, filename: Filename) -> Key:
         for suffix in self.suffixes:
-            filename = filename.removesuffix(suffix)
+            # filename = filename.removesuffix(suffix)
+            filename = remove_suffix(filename, suffix)
         return filename
 
     def get_deps(self, filename: Filename) -> List[Filename]:

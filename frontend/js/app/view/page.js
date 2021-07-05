@@ -1,48 +1,38 @@
-const DC = (...args) => document.createElement(...args);
+// depends ../utils/utils.js
 
 class Page {
 	constructor() {
 		// this.keys = [ 'graph', 'node', 'edge' ];
-		this.keys = [ 'graph'];
+		this.keys = [ 'graph', 'node' ];
 		this.attachElements();
 	}
 
 	attachElements() {
-		this.canvasEl = document.getElementById('graph-canvas');
+		this.canvasEl = $$.get('graph-canvas');
+		this.animate = $$.get('animate');
 		this.keys.forEach(k => {
 			this[k] = {
-				add: document.getElementById(`add-${k}`),
-				delete: document.getElementById(`delete-${k}`),
-				input: document.getElementById(`input-${k}`),
-				select: document.getElementById(`select-${k}`),
+				add: $$.get(`add-${k}`),
+				delete: $$.get(`delete-${k}`),
+				input: $$.get(`input-${k}`),
+				select: $$.get(`select-${k}`),
 			}
 		});
 	}
 
-	clearOptions(k) {
-		const el = this[k].select;
-		while (el.options.length > 0) {
-			el.options.remove(0);
-		}
+	get graphName() {
+		return this.graph.input.value;
 	}
 
-	clearAllOptions() {
-		this.keys.map(k => this.clearOptions(k));
+	get selectedGraph() {
+		return this.graph.select.value;
 	}
 
-	async loadGraphOptions(api) {
-		this.clearAllOptions();
-		const response = await api.read('_all');
-		console.log('response',response);
-		Object.entries(response.json).forEach(([id,g]) => {
-			const option = DC('option');
-			option.value = id;
-			option.text = g.name || id;
-			this.graph.select.options.add(option)
-		});
+	get nodeName() {
+		return this.node.input.value;
 	}
 
-	async load(api) {
-		await this.loadGraphOptions(api);
+	get selectedNode() {
+		return this.node.select.value;
 	}
 }

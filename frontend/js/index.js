@@ -8,14 +8,14 @@
 const randPos = graph =>
 	[...graph.V].reduce((d,k) => ({...d, [k]: [Math.random(), Math.random()]}), {});
 
-let count = 0;
+let count = 2;
 
 async function animate(attrGraph, renderer) {
 	renderer.renderGraph(attrGraph);
 	const animation = new AttrGraphAnimation(attrGraph, renderer);
 	const toPos = randPos(attrGraph);
 	await animation.to(toPos, 1500);
-	if (++count < 10) {
+	if (++count < 3) {
 		animate(attrGraph, renderer);
 	}
 }
@@ -31,14 +31,21 @@ const testApi = async () => {
 const main = async () => {
 	const graphData = dummyApi.getGraphData();
 	const attrGraph = new AttrGraph(graphData);
-	const page = new Page();
-	page.load(new GraphApi());
-	const renderer = new SimpleGraphRenderer(page.canvasEl);
+	// const page = new Page();
+	// page.load(new GraphApi());
+	let renderer;
+	pageView = new PageView({
+		animateCallback: attrGraph => animate(attrGraph, renderer),
+	});
+	await pageView.initialize();
+	renderer = new SimpleGraphRenderer(pageView.page.canvasEl);
 	animate(attrGraph, renderer);
 	await testApi();
+	/*
 	const api = new GraphApi();
 	pageView = new PageView({page, api});
 	pageView.attachHandlers();
+	*/
 }
 
 main();

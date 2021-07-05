@@ -5,6 +5,7 @@
 .m-center {
 	margin-left: auto;
 	margin-right: auto;
+	width: 80%;
 }
 
 .title {
@@ -26,7 +27,6 @@ form {
 	border-radius: 4px;
 	padding: 4px 8px;
 	background-color: #aaa;
-	width: 60%;
 }
 
 input {
@@ -78,7 +78,6 @@ button {
 	border-radius: 4px;
 	padding: 4px 8px;
 	background-color: #aaa;
-	width: 60%;
 	margin-top: 16px;
 	padding: 32px;
 	justify-content: center;
