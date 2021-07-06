@@ -5,19 +5,44 @@
 // depends app/view/page.js
 // depends app/view/pageView.js
 
+class Mutex {
+	constructor() {
+		this.p = Promise.resolve(null);
+	}
+
+	async lock() {
+		const oldP = this.p;
+		let _res;
+		this.p = new Promise(res => { _res = res; });
+		await oldP;
+		return _res;
+	}
+}
+
+const mutex = new Mutex();
+
 const randPos = graph =>
 	[...graph.V].reduce((d,k) => ({...d, [k]: [Math.random(), Math.random()]}), {});
 
-let count = 2;
+const count = 3;
+const t = 1000;
 
-async function animate(attrGraph, renderer) {
-	renderer.renderGraph(attrGraph);
-	const animation = new AttrGraphAnimation(attrGraph, renderer);
-	const toPos = randPos(attrGraph);
-	await animation.to(toPos, 1500);
-	if (++count < 3) {
-		animate(attrGraph, renderer);
+let runningAnimation = null;
+
+async function animate(attrGraph, renderer, clear) {
+	if (runningAnimation) {
+		await runningAnimation.stop();
 	}
+	const unlock = await mutex.lock();
+	let animation = null;
+	for (let i = 0; i < count; ++i) {
+		const next = new AttrGraphAnimation(attrGraph, renderer);
+		const toPosDict = randPos(attrGraph);
+		next.to({toPosDict, t});
+		animation = animation ? new ChainAnimation(animation, next) : next;
+	}
+	animation.start().then(unlock);
+	runningAnimation = animation;
 }
 
 const testApi = async () => {
@@ -31,21 +56,14 @@ const testApi = async () => {
 const main = async () => {
 	const graphData = dummyApi.getGraphData();
 	const attrGraph = new AttrGraph(graphData);
-	// const page = new Page();
-	// page.load(new GraphApi());
 	let renderer;
 	pageView = new PageView({
 		animateCallback: attrGraph => animate(attrGraph, renderer),
 	});
-	await pageView.initialize();
 	renderer = new SimpleGraphRenderer(pageView.page.canvasEl);
+	await pageView.initialize();
 	animate(attrGraph, renderer);
 	await testApi();
-	/*
-	const api = new GraphApi();
-	pageView = new PageView({page, api});
-	pageView.attachHandlers();
-	*/
 }
 
 main();
